@@ -1,6 +1,7 @@
 ---
 - name: generate temporary files
   hosts: all
+  gather_facts: no
 
   tasks:
     - name: setup the variable to dump
@@ -28,12 +29,8 @@
 
   tasks:
     - name: read and count the variables in all .json files
-      block:
-        - set_fact:
-            onehost: "{{ lookup('file', item) }}"
-        - set_fact:
-            total_ok: "{{ total_ok + onehost['ok_count'] }}"
-            total_ng: "{{ total_ng + onehost['ng_count'] }}"
+      include_tasks:
+        file: loopblock.yml
       with_fileglob:
         - "/var/tmp/test_*.json"
 

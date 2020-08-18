@@ -1,0 +1,9 @@
+---
+- set_fact:
+    onehost: "{{ lookup('file', item) }}"
+- set_fact:
+    ok1: "{{ onehost['ok_count'] | int }}"
+    ng1: "{{ onehost['ng_count'] | int }}"
+- set_fact:
+    total_ok: "{{ total_ok|int + ok1|int }}"
+    total_ng: "{{ total_ng|int + ng1|int }}"
