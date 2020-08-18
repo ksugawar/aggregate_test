@@ -1,5 +1,4 @@
 *~
 collections/*
 !collections/requirements.yml
-ansible.cfg*
 extra-vars.yml*

@@ -1,0 +1,44 @@
+---
+- name: generate temporary files
+  hosts: all
+
+  tasks:
+    - name: setup the variable to dump
+      set_fact:
+        output_var:
+          hostname: "{{ inventory_hostname }}"
+          ok_count: "{{ 10 | random }}"
+          ng_count: "{{ 10 | random }}"
+      delegate_to: localhost
+
+    - name: dump the variable to a local file
+      copy:
+        content: "{{ output_var | to_nice_json }}"
+        dest: "/var/tmp/test_{{ inventory_hostname }}.json"
+        force: yes
+      delegate_to: localhost
+
+- name: aggregate temporary files
+  hosts: localhost
+  connection: local
+  gather_facts: no
+  vars:
+    total_ok: 0
+    total_ng: 0
+
+  tasks:
+    - name: read and count the variables in all .json files
+      block:
+        - set_fact:
+            onehost: "{{ lookup('file', item) }}"
+        - set_fact:
+            total_ok: "{{ total_ok + onehost['ok_count'] }}"
+            total_ng: "{{ total_ng + onehost['ng_count'] }}"
+      with_fileglob:
+        - "/var/tmp/test_*.json"
+
+    - name: print total counts
+      debug:
+        msg: "Total OKs = {{ total_ok }}, Total NGs = {{ total_ng }}"
+
+
