@@ -10,7 +10,6 @@
           hostname: "{{ inventory_hostname }}"
           ok_count: "{{ 10 | random }}"
           ng_count: "{{ 10 | random }}"
-      delegate_to: localhost
 
     - name: dump the variable to a local file
       copy:
