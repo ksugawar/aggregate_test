@@ -59,7 +59,7 @@
     - name: judge_NG
       debug:
         msg:
-        - "NG: {{ comment_set.results[item.0].msg }}"
+        - "NG"
         - "{{ item.stdout_lines }}"
       loop: "{{ result.results | flatten(levels=1) }}"
       register: NG
