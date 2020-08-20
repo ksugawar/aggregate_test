@@ -106,13 +106,6 @@
           ok_count: "{{ ok_count }}"
           ng_count: "{{ ng_count }}"
 
-    - name: dump the variable to a local JSON file
-      copy:
-        content: "{{ output_var | to_json }}"
-        dest: "/var/tmp/test_{{ datenow }}_{{ inventory_hostname }}.json"
-        force: yes
-      delegate_to: localhost
-
     - name: dump the variable to a local YAML file
       copy:
         content: "{{ output_var | to_nice_yaml }}"
@@ -134,7 +127,7 @@
       include_tasks:
         file: loopblock.yml
       with_fileglob:
-        - "/var/tmp/test_{{ today }}_*.json"
+        - "/var/tmp/test_{{ today }}_*.yml"
 
     #OK判定、NG判定のコマンド数をそれぞれ表示
     - name: print total counts

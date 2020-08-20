@@ -1,6 +1,6 @@
 ---
 - set_fact:
-    onehost: "{{ lookup('file', item) }}"
+    onehost: "{{ lookup('file', item) | from_yaml }}"
 
 - debug:
     var: onehost
