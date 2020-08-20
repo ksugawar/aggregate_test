@@ -96,8 +96,7 @@
 
     - name: count NG
       set_fact:
-        outputvarNG:    
-          ng_count: "{{ ng_count|int + item.msg|int }}"
+        ng_count: "{{ ng_count|int + item.msg|int }}"
       loop: "{{ count_NG.results | flatten(levels=1) }}"
       when : item.msg is defined
 
