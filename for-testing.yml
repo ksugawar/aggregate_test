@@ -17,29 +17,33 @@
       raw: "ping -c 5 {{ item }}"
       register: result
       # when: hostname is match (item.leaf_name)
-      with_items: "{{ com_list }}"
+      loop: "{{ com_list }}"
       # loop_control:
       #   label: "com_list"
       # no_log: true
       ignore_errors: yes
 
-    - debug:
-        var: result
+    # - debug:
+    #     var: result
 
-    - debug:
-        msg: "{{ result.results|flatten(levels=1) }}"
+    # - debug:
+    #     msg: "{{ result.results|flatten(levels=1) }}"
 
     # OKのping結果を表示する
     - name: judge_OK
       debug:
         msg:
-        - "OK"
-        - "{{ item.stdout_lines }}"
+          - "OK"
+          - "{{ item.stdout_lines }}"
       loop: "{{ result.results | flatten(levels=1) }}"
       register: OK
       # loop_control:
       #   label: "results"
       when: item.stdout_lines is defined and item.stdout is search("time=")
+
+    - name: debug OK
+      debug:
+        var: OK
 
     # 各ホストのOKの数を表示する
     - name: count_OK
