@@ -36,10 +36,6 @@
       #   label: "results"
       when: item.stdout_lines is defined and item.stdout is search("time=")
 
-    - name: debug OK
-      debug:
-        var: OK
-
     # 各ホストのOKの数を表示する
     - name: count_OK
       debug:
@@ -71,12 +67,6 @@
       # loop_control:
       #   label: "NG"
       when : item.msg is defined
-
-    - debug:
-        var: count_OK.results
-
-    - debug:
-        var: count_NG.results
 
     - name: initialize OK/NG counts
       set_fact:
