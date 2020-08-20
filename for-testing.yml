@@ -109,6 +109,7 @@
   connection: local
   gather_facts: yes
   vars:
+    today: "{{ ansible_facts['ansible_date_time']['date'] }}"
     total_ok: 0
     total_ng: 0
 
@@ -118,7 +119,7 @@
       include_tasks:
         file: inc_lpn_pin.yml
       with_fileglob:
-        - "/var/tmp/test_{{ ansible_facts['ansible_date_time']['date'] }}_*.yml"
+        - "/var/tmp/test_{{ today }}_*.yml"
 
     #OK判定、NG判定のコマンド数をそれぞれ表示
     - name: print total counts
