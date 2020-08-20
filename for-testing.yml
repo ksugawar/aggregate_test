@@ -30,7 +30,7 @@
         msg:
           - "OK"
           - "{{ item.stdout_lines }}"
-      loop: "{{ result.results | flatten(levels=1) }}"
+      loop: "{{ result.results }}"
       register: OK
       # loop_control:
       #   label: "results"
@@ -40,7 +40,7 @@
     - name: count_OK
       debug:
         msg: "{{ item.msg | length / 2}}"
-      loop: "{{ OK.results | flatten(levels=1) }}"
+      loop: "{{ OK.results }}"
       register: count_OK
       # loop_control:
       #   label: "OK"
@@ -52,7 +52,7 @@
         msg:
         - "NG"
         - "{{ item.stdout_lines }}"
-      loop: "{{ result.results | flatten(levels=1) }}"
+      loop: "{{ result.results }}"
       register: NG
       # loop_control:
       #   label: "results"
@@ -62,7 +62,7 @@
     - name: count_NG
       debug:
         msg: "{{ item.msg | length / 2 }}"
-      loop: "{{ NG.results | flatten(levels=1) }}"
+      loop: "{{ NG.results }}"
       register: count_NG
       # loop_control:
       #   label: "NG"
@@ -76,13 +76,13 @@
     - name: count OK
       set_fact:
         ok_count: "{{ ok_count|int + item.msg|int }}"
-      loop: "{{ count_OK.results | flatten(levels=1) }}"
+      loop: "{{ count_OK.results }}"
       when : item.msg is defined
 
     - name: count NG
       set_fact:
         ng_count: "{{ ng_count|int + item.msg|int }}"
-      loop: "{{ count_NG.results | flatten(levels=1) }}"
+      loop: "{{ count_NG.results }}"
       when : item.msg is defined
 
     - name: show OK/NG counts
