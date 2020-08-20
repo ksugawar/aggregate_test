@@ -35,7 +35,7 @@
         msg:
         - "OK"
         - "{{ item.stdout_lines }}"
-      with_indexed_items: "{{ result.results }}"
+      loop: "{{ result.results | flatten(levels=1) }}"
       register: OK
       # loop_control:
       #   label: "results"
@@ -45,7 +45,7 @@
     - name: count_OK
       debug:
         msg: "{{ item.msg | length / 2}}"
-      with_indexed_items: "{{ OK.results }}"
+      loop: "{{ OK.results | flatten(levels=1) }}"
       register: count_OK
       # loop_control:
       #   label: "OK"
@@ -57,7 +57,7 @@
         msg:
         - "NG: {{ comment_set.results[item.0].msg }}"
         - "{{ item.stdout_lines }}"
-      with_indexed_items: "{{ result.results }}"
+      loop: "{{ result.results | flatten(levels=1) }}"
       register: NG
       # loop_control:
       #   label: "results"
@@ -67,7 +67,7 @@
     - name: count_NG
       debug:
         msg: "{{ item.msg | length / 2 }}"
-      with_indexed_items: "{{ NG.results }}"
+      loop: "{{ NG.results | flatten(levels=1) }}"
       register: count_NG
       # loop_control:
       #   label: "NG"
