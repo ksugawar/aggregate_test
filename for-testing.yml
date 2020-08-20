@@ -54,7 +54,7 @@
 
     - name: dump the variable to a local YAML file
       copy:
-        content: "{{ output_var | to_nice_yaml }}"
+        content: "{{ output_var | to_yaml }}"
         dest: "/var/tmp/test_{{ datenow }}_{{ inventory_hostname }}.yml"
         force: yes
       delegate_to: localhost
