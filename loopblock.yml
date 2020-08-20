@@ -1,13 +1,20 @@
 ---
 - set_fact:
     onehost: "{{ lookup('file', item) }}"
+
+- debug:
+    var: onehost
+
 - set_fact:
     ok1: "{{ onehost['ok_count'] | int }}"
     ng1: "{{ onehost['ng_count'] | int }}"
+
 - debug:
     msg: "File: {{ item }}, OKs: {{ ok1 }}, NGs: {{ ng1 }}"
+
 - set_fact:
     total_ok: "{{ total_ok|int + ok1|int }}"
     total_ng: "{{ total_ng|int + ng1|int }}"
+
 - debug:
     msg: "Sub totals: OKs = {{ total_ok }}, NGs = {{ total_ng }}"
