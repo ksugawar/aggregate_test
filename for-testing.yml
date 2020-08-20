@@ -21,6 +21,7 @@
       # loop_control:
       #   label: "com_list"
       # no_log: true
+      ignore_errors: yes
 
     # OKのping結果を表示する
     - name: judge_OK
