@@ -39,7 +39,7 @@
       register: OK
       # loop_control:
       #   label: "results"
-      when: item.stdout_lines is defined and item.stdout is match(".*time=.*")
+      when: item.stdout_lines is defined and item.stdout is search("time=")
 
     # 各ホストのOKの数を表示する
     - name: count_OK
@@ -61,7 +61,7 @@
       register: NG
       # loop_control:
       #   label: "results"
-      when: item.stdout_lines is defined and item.stdout is match(".*Unreachable.*")
+      when: item.stdout_lines is defined and item.stdout is not search("time=")
 
     # 各ホストのNGの数を表示する
     - name: count_NG
