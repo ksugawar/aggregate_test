@@ -23,6 +23,9 @@
       # no_log: true
       ignore_errors: yes
 
+    - debug:
+        var: result
+
     # OKのping結果を表示する
     - name: judge_OK
       debug:
