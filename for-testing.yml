@@ -108,7 +108,7 @@
 
     - name: dump the variable to a local JSON file
       copy:
-        content: "{{ output_var | to_nice_json }}"
+        content: "{{ output_var | to_json }}"
         dest: "/var/tmp/test_{{ datenow }}_{{ inventory_hostname }}.json"
         force: yes
       delegate_to: localhost
@@ -130,11 +130,11 @@
 
   tasks:
     #ファイル読み込み
-    - name: read and count the variables in all .yml files
+    - name: read and count the variables in all .json files
       include_tasks:
         file: loopblock.yml
       with_fileglob:
-        - "/var/tmp/test_{{ today }}_*.yml"
+        - "/var/tmp/test_{{ today }}_*.json"
 
     #OK判定、NG判定のコマンド数をそれぞれ表示
     - name: print total counts
