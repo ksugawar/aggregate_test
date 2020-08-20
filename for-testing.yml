@@ -107,7 +107,7 @@
 - name: play2
   hosts: localhost
   connection: local
-  gather_facts: no
+  gather_facts: yes
   vars:
     total_ok: 0
     total_ng: 0
