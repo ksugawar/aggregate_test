@@ -31,13 +31,13 @@
 
     - name: count OK
       set_fact:
-        ok_count: "{{ ok_count + 1 }}"
+        ok_count: "{{ ok_count|int + 1 }}"
       loop: "{{ result.results }}"
       when: item.stdout_lines is defined and item.stdout is search("time=")
 
     - name: count NG
       set_fact:
-        ng_count: "{{ ng_count|int + item.msg|int }}"
+        ng_count: "{{ ng_count|int + 1 }}"
       loop: "{{ result.results }}"
       when: item.stdout_lines is defined and item.stdout is not search("time=")
 
