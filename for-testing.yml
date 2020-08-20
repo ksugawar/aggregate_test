@@ -14,12 +14,6 @@
         
   tasks:
 
-    - debug:
-        var: ansible_facts
-
-    - debug:
-        var: ansible_facts['ansible_date_time']
-
     - name: sending_ping
       raw: "ping -c 5 {{ item }}"
       register: result
@@ -29,12 +23,6 @@
       #   label: "com_list"
       # no_log: true
       ignore_errors: yes
-
-    # - debug:
-    #     var: result
-
-    # - debug:
-    #     msg: "{{ result.results|flatten(levels=1) }}"
 
     # OKのping結果を表示する
     - name: judge_OK
@@ -120,8 +108,8 @@
 
     - name: dump the variable to a local file
       copy:
-        content: "{{ output_var | to_yaml }}"
-        dest: "/var/tmp/test_{{ datenow }}_{{ inventory_hostname }}.yml"
+        content: "{{ output_var | to_nice_json }}"
+        dest: "/var/tmp/test_{{ datenow }}_{{ inventory_hostname }}.json"
         force: yes
       delegate_to: localhost
 
@@ -135,11 +123,11 @@
 
   tasks:
     #ファイル読み込み
-    - name: read and count the variables in all .yml files
+    - name: read and count the variables in all .json files
       include_tasks:
         file: loopblock.yml
       with_fileglob:
-        - "/var/tmp/test_{{ today }}_*.yml"
+        - "/var/tmp/test_{{ today }}_*.json"
 
     #OK判定、NG判定のコマンド数をそれぞれ表示
     - name: print total counts
