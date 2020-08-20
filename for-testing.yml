@@ -24,50 +24,6 @@
       # no_log: true
       ignore_errors: yes
 
-    # OKのping結果を表示する
-    - name: judge_OK
-      debug:
-        msg:
-          - "OK"
-          - "{{ item.stdout_lines }}"
-      loop: "{{ result.results }}"
-      register: OK
-      # loop_control:
-      #   label: "results"
-      when: item.stdout_lines is defined and item.stdout is search("time=")
-
-    # 各ホストのOKの数を表示する
-    - name: count_OK
-      debug:
-        msg: "{{ item.msg | length / 2}}"
-      loop: "{{ OK.results }}"
-      register: count_OK
-      # loop_control:
-      #   label: "OK"
-      when : item.msg is defined
-
-    # NGのping結果を確認する
-    - name: judge_NG
-      debug:
-        msg:
-        - "NG"
-        - "{{ item.stdout_lines }}"
-      loop: "{{ result.results }}"
-      register: NG
-      # loop_control:
-      #   label: "results"
-      when: item.stdout_lines is defined and item.stdout is not search("time=")
-
-    # 各ホストのNGの数を表示する
-    - name: count_NG
-      debug:
-        msg: "{{ item.msg | length / 2 }}"
-      loop: "{{ NG.results }}"
-      register: count_NG
-      # loop_control:
-      #   label: "NG"
-      when : item.msg is defined
-
     - name: initialize OK/NG counts
       set_fact:
         ok_count: 0
@@ -75,15 +31,15 @@
 
     - name: count OK
       set_fact:
-        ok_count: "{{ ok_count|int + item.msg|int }}"
-      loop: "{{ count_OK.results }}"
-      when : item.msg is defined
+        ok_count: "{{ ok_count + 1 }}"
+      loop: "{{ result.results }}"
+      when: item.stdout_lines is defined and item.stdout is search("time=")
 
     - name: count NG
       set_fact:
         ng_count: "{{ ng_count|int + item.msg|int }}"
-      loop: "{{ count_NG.results }}"
-      when : item.msg is defined
+      loop: "{{ result.results }}"
+      when: item.stdout_lines is defined and item.stdout is not search("time=")
 
     - name: show OK/NG counts
       debug:
