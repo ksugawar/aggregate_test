@@ -104,20 +104,22 @@
       debug:
         msg: "ok_count = {{ ok_count }}, ng_count = {{ ng_count }}"
 
-#       # 前のタスクで生成したデータを JSON フォーマットで一時ファイルに出力する
-# # 後で localhost 上で集計を行うため、localhost 上でモジュールを実行してファイルも locahost に作成されるようにしている
-#     - name: dump the variable to a local file
-#       copy:
-#         content:
-#         - "{{ outputvarOK | to_yaml }}"
-#         - "{{ outputvarNG | to_yaml }}"
-#         dest: "/var/tmp/test_{{ datenow }}_{{ inventory_hostname }}.yml"
-#         force: yes
-#       delegate_to: localhost
+    - name: setup the variable to dump
+      set_fact:
+        output_var:
+          hostname: "{{ inventory_hostname }}"
+          ok_count: "{{ ok_count }}"
+          ng_count: "{{ ng_count }}"
+
+    - name: dump the variable to a local file
+      copy:
+        content: "{{ output_var | to_yaml }}"
+        dest: "/var/tmp/test_{{ datenow }}_{{ inventory_hostname }}.yml"
+        force: yes
+      delegate_to: localhost
 
 - name: play2
   hosts: localhost
-  connection: local
   gather_facts: yes
   vars:
     today: "{{ ansible_facts['ansible_date_time']['date'] }}"
@@ -128,7 +130,7 @@
     #ファイル読み込み
     - name: read and count the variables in all .yml files
       include_tasks:
-        file: inc_lpn_pin.yml
+        file: loopblock.yml
       with_fileglob:
         - "/var/tmp/test_{{ today }}_*.yml"
 
