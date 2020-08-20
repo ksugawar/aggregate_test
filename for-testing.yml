@@ -26,6 +26,9 @@
     - debug:
         var: result
 
+    - debug:
+        msg: "{{ result.results|flatten(levels=1) }}"
+
     # OKのping結果を表示する
     - name: judge_OK
       debug:
