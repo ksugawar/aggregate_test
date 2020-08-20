@@ -13,6 +13,13 @@
       - 10.64.201.181
         
   tasks:
+
+    - debug:
+        var: ansible_facts
+
+    - debug:
+        var: ansible_facts['ansible_date_time']
+
     - name: sending_ping
       raw: "ping -c 5 {{ item }}"
       register: result
