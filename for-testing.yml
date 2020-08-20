@@ -26,7 +26,7 @@
     - name: judge_OK
       debug:
         msg:
-        - "OK: {{ comment_set.results[item.0].msg}}"
+        - "OK"
         - "{{ item.1.stdout_lines }}"
       with_indexed_items: "{{ result.results }}"
       register: OK
