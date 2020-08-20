@@ -20,7 +20,6 @@
 
 - name: aggregate temporary files
   hosts: localhost
-  connection: local
   gather_facts: no
   vars:
     total_ok: 0
