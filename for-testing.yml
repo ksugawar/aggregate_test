@@ -83,25 +83,27 @@
     - debug:
         var: count_NG.results
 
-#     - name: setup the variable to dump_OK　＃エラー発生個所
-#       set_fact:
-#         outputvarOK:
-#           hostname_OK: "{{ inventory_hostname }}"
-#           ok_count: "{{ item.msg }}"
-#       with_indexed_items: "{{ count_OK.results }}"
-#       # loop_control:
-#       #   label: "OK"
-#       when : item.msg is defined
+    - name: initialize OK/NG counts
+      set_fact:
+        ok_count: 0
+        ng_count: 0
 
-#     - name: setup the variable to dump_NG
-#       set_fact:
-#         outputvarNG:    
-#           hostname_NG: "{{ inventory_hostname }}"  # ここでは random で乱数のダミーデータを生成していますが、count_OK で得られた値を使ってください
-#           ng_count: "{{ item.msg }}"      # 同上。ただし count_NG を使ってください
-#       with_indexed_items: "{{ count_NG.results }}"
-#       # loop_control:
-#       #   label: "NG"
-#       when : item.msg is defined
+    - name: count OK
+      set_fact:
+        ok_count: "{{ ok_count|int + item.msg|int }}"
+      loop: "{{ count_OK.results | flatten(levels=1) }}"
+      when : item.msg is defined
+
+    - name: count NG
+      set_fact:
+        outputvarNG:    
+          ng_count: "{{ ng_count|int + item.msg|int }}"
+      loop: "{{ count_NG.results | flatten(levels=1) }}"
+      when : item.msg is defined
+
+    - name: show OK/NG counts
+      debug:
+        msg: "ok_count = {{ ok_count }}, ng_count = {{ ng_count }}"
 
 #       # 前のタスクで生成したデータを JSON フォーマットで一時ファイルに出力する
 # # 後で localhost 上で集計を行うため、localhost 上でモジュールを実行してファイルも locahost に作成されるようにしている
