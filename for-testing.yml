@@ -34,44 +34,44 @@
       debug:
         msg:
         - "OK"
-        - "{{ item.1.stdout_lines }}"
+        - "{{ item.stdout_lines }}"
       with_indexed_items: "{{ result.results }}"
       register: OK
       loop_control:
         label: "results"
-      when: item.1.stdout_lines is defined and item.1.stdout is match("time=")
+      when: item.stdout_lines is defined and item.stdout is match("time=")
 
     # 各ホストのOKの数を表示する
     - name: count_OK
       debug:
-        msg: "{{ item.1.msg | length / 2}}"
+        msg: "{{ item.msg | length / 2}}"
       with_indexed_items: "{{ OK.results }}"
       register: count_OK
       loop_control:
         label: "OK"
-      when : item.1.msg is defined
+      when : item.msg is defined
 
     # NGのping結果を確認する
     - name: judge_NG
       debug:
         msg:
         - "NG: {{ comment_set.results[item.0].msg }}"
-        - "{{ item.1.stdout_lines }}"
+        - "{{ item.stdout_lines }}"
       with_indexed_items: "{{ result.results }}"
       register: NG
       # loop_control:
       #   label: "results"
-      when: item.1.stdout_lines is defined and item.1.stdout is match("Unreachable")
+      when: item.stdout_lines is defined and item.stdout is match("Unreachable")
 
     # 各ホストのNGの数を表示する
     - name: count_NG
       debug:
-        msg: "{{ item.1.msg | length / 2 }}"
+        msg: "{{ item.msg | length / 2 }}"
       with_indexed_items: "{{ NG.results }}"
       register: count_NG
       loop_control:
         label: "NG"
-      when : item.1.msg is defined
+      when : item.msg is defined
 
     - debug:
         var: count_OK.results
@@ -83,21 +83,21 @@
 #       set_fact:
 #         outputvarOK:
 #           hostname_OK: "{{ inventory_hostname }}"
-#           ok_count: "{{ item.1.msg }}"
+#           ok_count: "{{ item.msg }}"
 #       with_indexed_items: "{{ count_OK.results }}"
 #       # loop_control:
 #       #   label: "OK"
-#       when : item.1.msg is defined
+#       when : item.msg is defined
 
 #     - name: setup the variable to dump_NG
 #       set_fact:
 #         outputvarNG:    
 #           hostname_NG: "{{ inventory_hostname }}"  # ここでは random で乱数のダミーデータを生成していますが、count_OK で得られた値を使ってください
-#           ng_count: "{{ item.1.msg }}"      # 同上。ただし count_NG を使ってください
+#           ng_count: "{{ item.msg }}"      # 同上。ただし count_NG を使ってください
 #       with_indexed_items: "{{ count_NG.results }}"
 #       # loop_control:
 #       #   label: "NG"
-#       when : item.1.msg is defined
+#       when : item.msg is defined
 
 #       # 前のタスクで生成したデータを JSON フォーマットで一時ファイルに出力する
 # # 後で localhost 上で集計を行うため、localhost 上でモジュールを実行してファイルも locahost に作成されるようにしている
