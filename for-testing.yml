@@ -31,9 +31,9 @@
         - "{{ item.1.stdout_lines }}"
       with_indexed_items: "{{ result.results }}"
       register: OK
-      # loop_control:
-      #   label: "results"
-      when: item.1.stdout_lines is defined and item.1.stdout_lines[1] is match (".*icmp.*")
+      loop_control:
+        label: "results"
+      when: item.1.stdout_lines is defined and item.1.stdout is match("time=")
 
     # 各ホストのOKの数を表示する
     - name: count_OK
@@ -41,8 +41,8 @@
         msg: "{{ item.1.msg | length / 2}}"
       with_indexed_items: "{{ OK.results }}"
       register: count_OK
-      # loop_control:
-      #   label: "OK"
+      loop_control:
+        label: "OK"
       when : item.1.msg is defined
 
     # NGのping結果を確認する
@@ -55,7 +55,7 @@
       register: NG
       # loop_control:
       #   label: "results"
-      when: item.1.stdout_lines is defined and item.1.stdout_lines[1] is not match (".*icmp.*")
+      when: item.1.stdout_lines is defined and item.1.stdout is match("Unreachable")
 
     # 各ホストのNGの数を表示する
     - name: count_NG
@@ -63,8 +63,8 @@
         msg: "{{ item.1.msg | length / 2 }}"
       with_indexed_items: "{{ NG.results }}"
       register: count_NG
-      # loop_control:
-      #   label: "NG"
+      loop_control:
+        label: "NG"
       when : item.1.msg is defined
 
     - debug:
